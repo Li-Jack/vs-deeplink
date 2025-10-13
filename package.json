@@ -15,7 +15,9 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onCommand:deeplink.copyLocalLink"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [

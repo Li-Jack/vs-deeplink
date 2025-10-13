@@ -4,17 +4,17 @@ DeepLink is a Visual Studio Code extension that allows you to copy the path of t
 
 ## Features
 
-- **Copy Link**: Creates a markdown deeplink to the current file that can be used in personal note-taking tools like Obsidian, Notion, etc.
+- **Copy Link**: Creates a markdown deeplink to the current file that can be used in personal note-taking tools like Obsidian, Notion, etc. The link now includes the current cursor position (line and column) so the file opens exactly where you were editing.
 
   Example:
   
-  `[file.yaml](vscode://file//Users/username/repo/src/config/file.yaml)`
+  `[file.yaml:12:5](vscode://file//Users/username/repo/src/config/file.yaml:12:5)`
   
 ## Usage
 
 1. Open a file in Visual Studio Code.
 2. Invoke the DeepLink command by pressing ⇧⌘P and typing `deeplink` (or your configured keyboard shortcut).
-3. The absolute path of the current file will be copied to your clipboard as a Markdown deeplink.
+3. The absolute path of the current file, including the current cursor line and column, will be copied to your clipboard as a Markdown deeplink.
 4. Paste the deeplink in your desired application or document.
 
 ## Requirements

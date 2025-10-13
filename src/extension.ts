@@ -9,37 +9,44 @@ export function activate(context: vscode.ExtensionContext) {
 	console.log('The extension "deeplink" is now active!');
 
 	// The command is defined in the package.json file
-	let command1 = vscode.commands.registerCommand('deeplink.copyLocalLink', () => {
+	const command1 = vscode.commands.registerCommand('deeplink.copyLocalLink', () => {
 
 		// The display message
 		vscode.window.showInformationMessage('Copy local DeepLink!');
 
 		// Get the active editor
 		const activeEditor = vscode.window.activeTextEditor;
-		if (activeEditor) {
-			// Get the path of the current file
-			const filePath = activeEditor.document.fileName;
-			// Create a deeplink
-			const deeplink = `vscode://file/${filePath}`;
-			// Extract the base name of the file path
-			const baseName = path.basename(filePath);
-			// Make a markdown link
-			const link = `[${baseName}](${deeplink})`;
+		if (!activeEditor) {
+			vscode.window.showInformationMessage('No active editor found.');
+			return;
+		}
 
-			// Copy the absolute path to the clipboard
-			vscode.env.clipboard.writeText(link).then(
-				() => {
-					vscode.window.showInformationMessage('Absolute path copied to clipboard!');
-				},
-				(error) => {
-					vscode.window.showErrorMessage(`Failed to copy absolute path: ${error}`);
-				}
-			);
-			} else {
-				vscode.window.showInformationMessage('No active editor found.');
+		// Get the path of the current file and the cursor position (convert to 1-based indices)
+		const documentUri = activeEditor.document.uri;
+		const filePath = activeEditor.document.fileName;
+		const cursorPosition = activeEditor.selection.active;
+		const line = cursorPosition.line + 1;
+		const column = cursorPosition.character + 1;
+
+		// Normalise the URI so vscode understands the deeplink and opens at the desired position
+		const encodedPath = encodeURI(documentUri.path);
+		const deeplink = `vscode://file${encodedPath}:${line}:${column}`;
+
+		// Extract the base name of the file path
+		const baseName = path.basename(filePath);
+		// Make a markdown link
+		const link = `[${baseName}:${line}:${column}](${deeplink})`;
+
+		// Copy the absolute path to the clipboard
+		vscode.env.clipboard.writeText(link).then(
+			() => {
+				vscode.window.showInformationMessage('DeepLink (with cursor position) copied to clipboard!');
+			},
+			(error) => {
+				vscode.window.showErrorMessage(`Failed to copy absolute path: ${error}`);
 			}
+		);
 	});
-
 
 	context.subscriptions.push(command1);
 
